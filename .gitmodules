@@ -1,0 +1,3 @@
+[submodule "oTree"]
+	path = oTree
+	url = https://github.com/oTree-org/oTree
