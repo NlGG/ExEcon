@@ -1,0 +1,21 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    入力画面
+{% endblock %}
+
+{% block content %}
+
+    <p>
+      これから公共財供給ゲームを行います。<br />
+      プレイヤー人数は{{ Constants.players_per_group }}で、
+      各プレイヤーには{{ Constants.endowment }}のポイントが与えられています。<br />
+      また、このゲームにおける公共財の効用は私的財の{{ Constants.efficiency_factor }}倍となっています。
+    </p>
+
+    {% formfield player.contribution with label="公共財に投資する額を入力してください。" %}
+
+    {% next_button %}
+
+{% endblock %}
