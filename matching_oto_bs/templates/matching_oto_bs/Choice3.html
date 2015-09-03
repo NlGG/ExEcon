@@ -1,0 +1,113 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Round {{ subsession.round_number }} of {{ Constants.num_rounds }}　第三段階
+{% endblock %}
+
+{% block content %}
+
+    <h4>Instruction</h4>
+    <p>
+        この実験では、学生は{{ Constants.players_per_group }}人、
+        ゼミは{{ Constants.respondants_num }}つあります。<br />
+        希望するゼミを第一志望、第二志望、第三志望の順番で提出してください。<br />
+        なお、学生はゼミに1つのみ入ることができ、ゼミは学生を1人のみ受け入れることができ、
+        ゼミは成績の良い学生を優先的に受け入れるとします。
+    </p>
+
+    <p>
+        入ることが出来たゼミの私的ゼミ順位が、1位なら8点、2位なら7点、3位なら6点、
+        4位なら5点、5位なら4点、6位なら3点、7位なら2点、8位なら1点が与えられ、
+        どのゼミにも入れなかった場合は0点が与えられます。<br />
+        この実験は合計{{ Constants.num_rounds }}回行われます。
+    </p>
+
+    <h4>Round history</h4>
+    <table class="table">
+        <tr>
+            <th>ラウンド</th>
+            <th>獲得点数</th>
+        </tr>
+        {% for p in player_in_previous_rounds %}
+            <tr>
+                <td>{{ p.subsession.round_number }}</td>
+                <td>{{ p.payoff }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h4>ゼミの人気度</h4>
+    <table class="table">
+        <tr>
+            {% for i in respondants_num %}
+                <th>{{ i }}位</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for cr in common_ranks %}
+                <th>{{ cr }}</th>
+            {% endfor %}
+        </tr>
+    </table>
+
+    <h4>私的ゼミ順位</h4>
+    <table class="table">
+        <tr>
+            {% for i in respondants_num %}
+                <th>{{ i }}位</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for pr in private_ranks %}
+                <th>{{ pr }}</th>
+            {% endfor %}
+        </tr>
+    </table>
+
+    <h4>前期までの成績</h4>
+    <p>
+      {{ power }}点<br />
+      ※ただし、成績は平均50, 標準偏差10の正規分布よりランダムに発生されます。
+    </p>
+
+        <h4>
+          マッチング結果
+        </h4>
+        <table class="table">
+            <tr>
+              <th>プレイヤーID</th>
+              {% for i in players_num %}
+              <th>{{ i }}</th>
+              {% endfor %}
+            </tr>
+            <tr>
+              <th>マッチング先ゼミ</th>
+              {% for p in players %}
+              <th>
+                {% if p.matched != Constants.respondants_num %}
+                  {{ p.matched }}
+                {% else %}
+                  なし
+                {% endif %}
+              </th>
+              {% endfor %}
+            </tr>
+        </table>
+
+        <p>
+          {% if match_pair == Constants.respondants_num %}
+          第二段階では落選してしまいました。<br />
+          まだ受け入れを募集しているゼミの中から希望するゼミ(0番〜7番)を数字のみ記入して提出してください。<br />
+
+          {% formfield player.third_choice with label="志望ゼミ:" %}
+
+          {% else %}
+          あなたとのマッチング先のゼミは{{ match_pair }}になりました。<br />
+          確認が出来たらボタンを押してください。
+          {% endif %}
+        </p>
+
+    {% next_button %}
+
+{% endblock %}
